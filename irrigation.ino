@@ -13,10 +13,10 @@ LiquidCrystal lcd(pinLcdRs, pinLcdE, pinLcdD4, pinLcdD5, pinLcdD6, pinLcdD7);
 const byte numIrrigationSections = 3; // Number of irrigation sections
 byte currentIrrigationSection = 0;
 
-const byte pinSectionSwitch = 8;
+const byte pinSectionSwitch = 9;
 byte stateSectionSwitch = 0; 
 
-const byte pinOverrideSwitch = 9;
+const byte pinOverrideSwitch = 8;
 byte stateOverrideSwitch = 0; 
 bool isOverrideActive = false;
 
