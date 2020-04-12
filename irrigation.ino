@@ -29,7 +29,7 @@ void setup(){
   lcd.begin(16, 2);
   
   // initialize the pushbutton pin as an input:
-  pinMode(pinSectionSwitch, INPUT);
+  pinMode(pinSectionSwitch, INPUT_PULLUP);
 
   updateDisplay();
 }
@@ -38,8 +38,8 @@ void setup(){
 
 void loop(){
   if (!isOverrideActive){
-    stateSectionSwitch = digitalRead(pinSectionSwitch);
-    if (stateSectionSwitch == HIGH){
+    stateSectionSwitch = !digitalRead(pinSectionSwitch);
+    if (stateSectionSwitch){
       switchIrrigationSection();
     }
   }
