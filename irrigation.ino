@@ -2,15 +2,27 @@
 
 // initialize the library with the numbers of the interface pins
 
-LiquidCrystal lcd(2, 3, 8, 9, 10, 11); /// REGISTER SELECT PIN,ENABLE PIN,D4 PIN,D5 PIN, D6 PIN, D7 PIN
+const byte pinLcdRs = 2;
+const byte pinLcdE = 3;
+const byte pinLcdD4 = 4;
+const byte pinLcdD5 = 5;
+const byte pinLcdD6 = 6;
+const byte pinLcdD7 = 7;
+LiquidCrystal lcd(pinLcdRs, pinLcdE, pinLcdD4, pinLcdD5, pinLcdD6, pinLcdD7);
 
 const byte numIrrigationSections = 3; // Number of irrigation sections
 byte currentIrrigationSection = 0;
 
-const byte pinSectionSwitch = 5;
+const byte pinSectionSwitch = 8;
 byte stateSectionSwitch = 0; 
 
+const byte pinOverrideSwitch = 9;
+byte stateOverrideSwitch = 0; 
+bool isOverrideActive = false;
+
 const byte pinLed = 13;
+
+const int delayButtons = 250;
 
 void setup(){
   // set up the LCD’s number of columns and rows:
@@ -19,16 +31,22 @@ void setup(){
   // initialize the pushbutton pin as an input:
   pinMode(pinSectionSwitch, INPUT);
 
-  updateIrrigationSection();
+  updateDisplay();
 }
 
  
 
 void loop(){
+  if (!isOverrideActive){
+    stateSectionSwitch = digitalRead(pinSectionSwitch);
+    if (stateSectionSwitch == HIGH){
+      switchIrrigationSection();
+    }
+  }
 
-  stateSectionSwitch = digitalRead(pinSectionSwitch);
-  if (stateSectionSwitch == HIGH){
-    switchIrrigationSection();
+  stateOverrideSwitch = digitalRead(pinOverrideSwitch);
+  if (stateOverrideSwitch == HIGH){
+    toggleOverride();
   }
   
 
@@ -45,13 +63,31 @@ void switchLed(bool state){
 void switchIrrigationSection(){
   currentIrrigationSection++;
   currentIrrigationSection%=numIrrigationSections;
-  updateIrrigationSection();
-  delay(250);
+  updateDisplay();
+  delay(delayButtons);
 }
 
-void updateIrrigationSection(){
-  String displayRow1 = String("Sektion ") + String(currentIrrigationSection+1);
+void toggleOverride(){
+  isOverrideActive = !isOverrideActive;
+  switchLed(isOverrideActive);
+  delay(delayButtons);
+  updateDisplay();
+}
+
+void updateDisplay(){
+  lcd.clear();
+  String displayRow1 = String("");
+  String displayRow2 = String("");
+
+  if (isOverrideActive){
+    displayRow1 = String("OVERRIDE ACTIVE!");
+  } else {
+    displayRow1 = String("Section ") + String(currentIrrigationSection+1);
+  }
   
-  lcd.setCursor(0, 0); // set the cursor to column 0, line 2
+  
+  lcd.setCursor(0, 0);
   lcd.print(displayRow1);
+  lcd.setCursor(0, 1);
+  lcd.print(displayRow2);
 }
