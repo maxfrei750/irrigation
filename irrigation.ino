@@ -42,7 +42,6 @@ long posTargetValueRotaryEncoderOld = -999;
 long posTargetValueRotaryEncoderNew = -999;
 
 // Miscellaneous variables and constants
-const byte pinLed = 13;
 const int delayButtons = 250;
 
 // Setup routine -------------------------------------------------------------------------------
@@ -127,14 +126,6 @@ void updateTargetValueRotaryEncoder()
 
     posTargetValueRotaryEncoderOld = posTargetValueRotaryEncoderNew;
     updateDisplay();
-  }
-}
-
-void switchLed(bool state) {
-  if (state) {
-    digitalWrite(pinLed, HIGH);
-  } else {
-    digitalWrite(pinLed, LOW);
   }
 }
 
