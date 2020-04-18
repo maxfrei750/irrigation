@@ -1,6 +1,7 @@
 // Includes -------------------------------------------------------------------------------------
 #include <LiquidCrystal.h>
 #include <Encoder.h>
+#include <EEPROM.h>
 
 
 // Constants and global variables ---------------------------------------------------------------
@@ -23,13 +24,17 @@ byte currentIrrigationSection = 0;
 const byte pinSectionSwitch = 9;
 byte stateSectionSwitch = 0;
 
+// Save settings button
+const byte pinSaveSettingsSwitch = 12;
+byte stateSaveSettingsSwitch = 0;
+
 // Override button
 const byte pinOverrideSwitch = 8;
 byte stateOverrideSwitch = 0;
 bool isOverrideActive = false;
 
 // Target value control
-int irrigationSectionTargets[numIrrigationSections];
+byte irrigationSectionTargets[numIrrigationSections];
 const byte pinTargetValueRotaryEncoderDt = 3;
 const byte pinTargetValueRotaryEncoderClk = 2;
 Encoder targetValueRotaryEncoder(pinTargetValueRotaryEncoderClk, pinTargetValueRotaryEncoderDt);
@@ -45,25 +50,51 @@ void setup() {
   lcd.begin(numLcdColumns, numLcdRows);
 
   pinMode(pinSectionSwitch, INPUT_PULLUP);
+  pinMode(LED_BUILTIN, OUTPUT);
+  
+  readEeprom();
 
   updateDisplay();
 }
-
 
 // Main loop -----------------------------------------------------------------------------------
 void loop() {
   if (!isOverrideActive) {
     checkSectionSwitch();
+    checkSaveSettingsSwitch();
     updateTargetValueRotaryEncoder();
   }
 
   checkOverrideSwitch();
 }
 
+// other routines
+void readEeprom(){
+   for (byte i = 0; i < numIrrigationSections; i++) {
+    irrigationSectionTargets[i] = EEPROM.read(i);
+  }
+}
+
+void updateEeprom(){
+   for (byte i = 0; i < numIrrigationSections; i++) {
+      EEPROM.update(i, irrigationSectionTargets[i]);
+    } 
+}
+
 void checkOverrideSwitch(){
   stateOverrideSwitch = digitalRead(pinOverrideSwitch);
   if (stateOverrideSwitch == HIGH) {
     toggleOverride();
+  }
+}
+
+void checkSaveSettingsSwitch(){
+  stateSaveSettingsSwitch = digitalRead(pinSaveSettingsSwitch);
+  if (stateSaveSettingsSwitch == HIGH) {
+    updateEeprom();
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(delayButtons);
+    digitalWrite(LED_BUILTIN, LOW);
   }
 }
 
@@ -86,11 +117,11 @@ void updateTargetValueRotaryEncoder()
       irrigationSectionTargets[currentIrrigationSection]--;
     }
 
-    if (irrigationSectionTargets[currentIrrigationSection] > 100) {
+    if (irrigationSectionTargets[currentIrrigationSection] == 101) {
       irrigationSectionTargets[currentIrrigationSection] = 100;
     }
 
-    if (irrigationSectionTargets[currentIrrigationSection] < 0) {
+    if (irrigationSectionTargets[currentIrrigationSection] == 255) {
       irrigationSectionTargets[currentIrrigationSection] = 0;
     }
 
@@ -130,7 +161,7 @@ void updateDisplay() {
     displayRow1 = String("!!!TESTMODUS!!!");
   } else {
     displayRow1 = String("Sektion ") + String(currentIrrigationSection + 1);
-    displayRow2 = String("Soll: ") + String(irrigationSectionTargets[currentIrrigationSection]);
+    displayRow2 = String("Soll:") + String(irrigationSectionTargets[currentIrrigationSection]);
   }
 
 
