@@ -19,7 +19,7 @@ const byte numLcdColumns = 16;
 LiquidCrystal lcd(pinLcdRs, pinLcdE, pinLcdD4, pinLcdD5, pinLcdD6, pinLcdD7);
 
 // Section control
-const byte numIrrigationSections = 3; // Number of irrigation sections
+const byte numIrrigationSections = 4; // Number of irrigation sections
 byte currentIrrigationSection = 0;
 const byte pinSectionSwitch = 9;
 byte stateSectionSwitch = 0;
