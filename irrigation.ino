@@ -160,16 +160,16 @@ void toggleOverride() {
 
 void updateDisplay() {
   lcd.clear();
-  String displayRow1 = String("");
-  String displayRow2 = String("");
+  char displayRow1[numLcdColumns];
+  char displayRow2[numLcdColumns];
 
   if (isOverrideActive) {
-    displayRow1 = String("!!!TESTMODUS!!!");
+    sprintf(displayRow1, "!!!TESTMODUS!!!");
+    sprintf(displayRow2, "");
   } else {
-    displayRow1 = String("Sektion ") + String(currentIrrigationSection + 1);
-    displayRow2 = String("Soll:") + String(irrigationSectionTargets[currentIrrigationSection])+String(" Ist:") + String(moistureValues[currentIrrigationSection]);
+    sprintf(displayRow1, "Sektion %d", currentIrrigationSection + 1);
+    sprintf(displayRow2, "Soll:%3d Ist:%3d", irrigationSectionTargets[currentIrrigationSection], moistureValues[currentIrrigationSection]);
   }
-
 
   lcd.setCursor(0, 0);
   lcd.print(displayRow1);
