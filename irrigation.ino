@@ -44,6 +44,8 @@ long posTargetValueRotaryEncoderNew = -999;
 //Moisture sensors
 int moistureValues[numIrrigationSections];
 int readEveryNthIteration = 100;
+int sensorRawMin = 190;
+int sensorRawMax = 700;
 
 // Miscellaneous variables and constants
 const int delayButtons = 250;
@@ -179,7 +181,8 @@ void readMoistureSensors(){
   bool doDisplayUpdate = false;
   
   for(byte iSensor=0; iSensor < numIrrigationSections; iSensor++){
-    int newValue = (1023.0 - analogRead(A0+iSensor))/1023.0*100.0;
+    //int newValue = analogRead(A0+iSensor);
+    int newValue = (1-(analogRead(A0+iSensor)-sensorRawMin)/float(sensorRawMax-sensorRawMin))*100.0;
     if (newValue != moistureValues[iSensor]){
       moistureValues[iSensor] = newValue;
       doDisplayUpdate = true;
