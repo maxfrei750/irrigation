@@ -66,13 +66,13 @@ void setup() {
 }
 
 // Main loop -----------------------------------------------------------------------------------
-void loop() {  
+void loop() {
   if (!isOverrideActive) {
     checkSectionSwitch();
     checkSaveSettingsSwitch();
     updateTargetValueRotaryEncoder();
 
-    if (!(iLoop % readEveryNthIteration)){
+    if (!(iLoop % readEveryNthIteration)) {
       readMoistureSensors();
     }
   }
@@ -85,26 +85,26 @@ void loop() {
 }
 
 // other routines
-void readEeprom(){
-   for (byte iAdress = 0; iAdress < numIrrigationSections; iAdress++) {
+void readEeprom() {
+  for (byte iAdress = 0; iAdress < numIrrigationSections; iAdress++) {
     irrigationSectionTargets[iAdress] = EEPROM.read(iAdress);
   }
 }
 
-void updateEeprom(){
-   for (byte iAdress = 0; iAdress < numIrrigationSections; iAdress++) {
-      EEPROM.update(iAdress, irrigationSectionTargets[iAdress]);
-    } 
+void updateEeprom() {
+  for (byte iAdress = 0; iAdress < numIrrigationSections; iAdress++) {
+    EEPROM.update(iAdress, irrigationSectionTargets[iAdress]);
+  }
 }
 
-void checkOverrideSwitch(){
+void checkOverrideSwitch() {
   stateOverrideSwitch = digitalRead(pinOverrideSwitch);
   if (stateOverrideSwitch == HIGH) {
     toggleOverride();
   }
 }
 
-void checkSaveSettingsSwitch(){
+void checkSaveSettingsSwitch() {
   stateSaveSettingsSwitch = digitalRead(pinSaveSettingsSwitch);
   if (stateSaveSettingsSwitch == HIGH) {
     updateEeprom();
@@ -114,7 +114,7 @@ void checkSaveSettingsSwitch(){
   }
 }
 
-void checkSectionSwitch(){
+void checkSectionSwitch() {
   stateSectionSwitch = !digitalRead(pinSectionSwitch);
   if (stateSectionSwitch) {
     switchIrrigationSection();
@@ -178,19 +178,19 @@ void updateDisplay() {
   lcd.print(displayRow2);
 }
 
-void readMoistureSensors(){
+void readMoistureSensors() {
   bool doDisplayUpdate = false;
-  
-  for(byte iSensor=0; iSensor < numIrrigationSections; iSensor++){
+
+  for (byte iSensor = 0; iSensor < numIrrigationSections; iSensor++) {
     //int newValue = analogRead(A0+iSensor);
-    int newValue = (1-(analogRead(pinsSensors[iSensor])-sensorRawMin)/float(sensorRawMax-sensorRawMin))*100.0;
-    if (newValue != moistureValues[iSensor]){
+    int newValue = (1 - (analogRead(pinsSensors[iSensor]) - sensorRawMin) / float(sensorRawMax - sensorRawMin)) * 100.0;
+    if (newValue != moistureValues[iSensor]) {
       moistureValues[iSensor] = newValue;
       doDisplayUpdate = true;
     }
   }
 
-  if (doDisplayUpdate){
+  if (doDisplayUpdate) {
     updateDisplay();
   }
 }
