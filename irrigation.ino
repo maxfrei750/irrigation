@@ -18,6 +18,9 @@ const byte numLcdRows = 2;
 const byte numLcdColumns = 16;
 LiquidCrystal lcd(pinLcdRs, pinLcdE, pinLcdD4, pinLcdD5, pinLcdD6, pinLcdD7);
 
+// Relay Board
+int pinsRelays[] = {19, 20, 21, 22};
+
 // Section control
 const byte numIrrigationSections = 4; // Number of irrigation sections
 byte currentIrrigationSection = 0;
@@ -59,7 +62,11 @@ void setup() {
 
   pinMode(pinSectionSwitch, INPUT_PULLUP);
   pinMode(LED_BUILTIN, OUTPUT);
-  
+
+  for (byte iRelayPin = 0; iRelayPin < 4; iRelayPin++) {
+    pinMode(pinsRelays[iRelayPin], OUTPUT);
+  }
+
   readEeprom();
   readMoistureSensors();
   updateDisplay();
@@ -74,6 +81,7 @@ void loop() {
 
     if (!(iLoop % readEveryNthIteration)) {
       readMoistureSensors();
+      setRelays();
     }
   }
 
@@ -192,5 +200,15 @@ void readMoistureSensors() {
 
   if (doDisplayUpdate) {
     updateDisplay();
+  }
+}
+
+void setRelays() {
+  for (byte iRelay = 0; iRelay < 4; iRelay++) {
+    if (irrigationSectionTargets[iRelay] > moistureValues[iRelay]) {
+      digitalWrite(pinsRelays[iRelay], HIGH);
+    } else {
+      digitalWrite(pinsRelays[iRelay], LOW);
+    }
   }
 }
