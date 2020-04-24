@@ -42,6 +42,7 @@ long posTargetValueRotaryEncoderOld = -999;
 long posTargetValueRotaryEncoderNew = -999;
 
 //Moisture sensors
+byte pinsSensors[] = {A0, A1, A2, A3};
 int moistureValues[numIrrigationSections];
 int readEveryNthIteration = 100;
 int sensorRawMin = 190;
@@ -182,7 +183,7 @@ void readMoistureSensors(){
   
   for(byte iSensor=0; iSensor < numIrrigationSections; iSensor++){
     //int newValue = analogRead(A0+iSensor);
-    int newValue = (1-(analogRead(A0+iSensor)-sensorRawMin)/float(sensorRawMax-sensorRawMin))*100.0;
+    int newValue = (1-(analogRead(pinsSensors[iSensor])-sensorRawMin)/float(sensorRawMax-sensorRawMin))*100.0;
     if (newValue != moistureValues[iSensor]){
       moistureValues[iSensor] = newValue;
       doDisplayUpdate = true;
