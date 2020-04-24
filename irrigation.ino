@@ -42,7 +42,7 @@ long posTargetValueRotaryEncoderOld = -999;
 long posTargetValueRotaryEncoderNew = -999;
 
 //Moisture sensors
-byte pinsSensors[] = {A0, A1, A2, A3};
+int pinsSensors[] = {23, 24, 25, 26};
 int moistureValues[numIrrigationSections];
 int readEveryNthIteration = 100;
 int sensorRawMin = 190;
