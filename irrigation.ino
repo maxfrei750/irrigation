@@ -7,32 +7,32 @@
 // Constants and global variables ---------------------------------------------------------------
 
 // LCD
-const byte pinLcdRs = 11;
-const byte pinLcdE = 10;
-const byte pinLcdD4 = 4;
-const byte pinLcdD5 = 5;
-const byte pinLcdD6 = 6;
-const byte pinLcdD7 = 7;
+const byte pinLcdRs = 35;
+const byte pinLcdE = 37;
+const byte pinLcdD4 = 39;
+const byte pinLcdD5 = 41;
+const byte pinLcdD6 = 43;
+const byte pinLcdD7 = 45;
 
 const byte numLcdRows = 2;
 const byte numLcdColumns = 16;
 LiquidCrystal lcd(pinLcdRs, pinLcdE, pinLcdD4, pinLcdD5, pinLcdD6, pinLcdD7);
 
 // Relay Board
-int pinsRelays[] = {19, 20, 21, 22};
+int pinsRelays[] = {30, 31, 32, 33};
 
 // Section control
 const byte numIrrigationSections = 4; // Number of irrigation sections
 byte currentIrrigationSection = 0;
-const byte pinSectionSwitch = 9;
+const byte pinSectionSwitch = 4;
 byte stateSectionSwitch = 0;
 
 // Save settings button
-const byte pinSaveSettingsSwitch = 12;
+const byte pinSaveSettingsSwitch = 49;
 byte stateSaveSettingsSwitch = 0;
 
 // Override button
-const byte pinOverrideSwitch = 8;
+const byte pinOverrideSwitch = 48;
 byte stateOverrideSwitch = 0;
 bool isOverrideActive = false;
 
@@ -45,7 +45,7 @@ long posTargetValueRotaryEncoderOld = -999;
 long posTargetValueRotaryEncoderNew = -999;
 
 //Moisture sensors
-int pinsSensors[] = {23, 24, 25, 26};
+int pinsSensors[] = {A0, A1, A2, A3};
 int moistureValues[numIrrigationSections];
 int readEveryNthIteration = 100;
 int sensorRawMin = 190;
