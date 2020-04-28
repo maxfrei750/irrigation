@@ -163,6 +163,7 @@ void switchIrrigationSection() {
 
 void toggleOverride() {
   isOverrideActive = !isOverrideActive;
+  setRelays();
   delay(delayButtons);
   updateDisplay();
 }
@@ -205,7 +206,7 @@ void readMoistureSensors() {
 
 void setRelays() {
   for (byte iRelay = 0; iRelay < 4; iRelay++) {
-    if (irrigationSectionTargets[iRelay] > moistureValues[iRelay]) {
+    if ((irrigationSectionTargets[iRelay] > moistureValues[iRelay]) || (isOverrideActive)) {
       digitalWrite(pinsRelays[iRelay], HIGH);
     } else {
       digitalWrite(pinsRelays[iRelay], LOW);
