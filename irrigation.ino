@@ -22,7 +22,7 @@ LiquidCrystal lcd(pinLcdRs, pinLcdE, pinLcdD4, pinLcdD5, pinLcdD6, pinLcdD7);
 int pinsRelays[] = {30, 31, 32, 33};
 
 // Section control
-const byte numIrrigationSections = 4; // Number of irrigation sections
+const byte numIrrigationSections = 3; // Number of irrigation sections
 byte currentIrrigationSection = 0;
 const byte pinSectionSwitch = 4;
 byte stateSectionSwitch = 0;
